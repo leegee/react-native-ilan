@@ -147,42 +147,43 @@ const App = () => {
 
   return (
     <View style={styles.container}>
-      <Svg height="100%" width="100%" style={styles.svg}>
-        {/* Render lines only when no circle is zoomed */}
-        {zoomedCircle === null && pathways.map((path, index) => {
-          const startSephirot = sephirot[path.start];
-          const endSephirot = sephirot[path.end];
+      <View style={styles.svgContainer}>
+        <Svg height="100%" width="100%" style={styles.svg}>
+          {/* Render lines only when no circle is zoomed */}
+          {zoomedCircle === null && pathways.map((path, index) => {
+            const startSephirot = sephirot[path.start];
+            const endSephirot = sephirot[path.end];
 
-          // Calculate absolute center points for lines
-          const startX = startSephirot.left * windowDimensions.width; // Convert to absolute x position
-          const startY = startSephirot.top * windowDimensions.height; // Convert to absolute y position
-          const endX = endSephirot.left * windowDimensions.width; // Convert to absolute x position
-          const endY = endSephirot.top * windowDimensions.height; // Convert to absolute y position
+            // Calculate absolute center points for lines
+            const startX = startSephirot.left * windowDimensions.width; // Convert to absolute x position
+            const startY = startSephirot.top * windowDimensions.height; // Convert to absolute y position
+            const endX = endSephirot.left * windowDimensions.width; // Convert to absolute x position
+            const endY = endSephirot.top * windowDimensions.height; // Convert to absolute y position
 
-          return (
-            <Line
-              key={index}
-              x1={startX + RADIUS}  // Adjust to start from center of circle
-              y1={startY + RADIUS}  // Adjust to start from center of circle
-              x2={endX + RADIUS}    // Adjust to end at center of circle
-              y2={endY + RADIUS}    // Adjust to end at center of circle
-              stroke="black"
-              strokeWidth="2"
-            />
-          );
-        })}
-      </Svg>
+            return (
+              <Line
+                key={index}
+                x1={startX + RADIUS}  // Adjust to start from center of circle
+                y1={startY + RADIUS}  // Adjust to start from center of circle
+                x2={endX + RADIUS}    // Adjust to end at center of circle
+                y2={endY + RADIUS}    // Adjust to end at center of circle
+                stroke="black"
+                strokeWidth="2"
+              />
+            );
+          })}
+        </Svg>
+        {renderCircles()}
+      </View>
 
-      {zoomedCircle === null ? (
-        renderCircles()
-      ) : (
+      {zoomedCircle === null ? null : (
         <View style={styles.zoomedContainer}>
           <ScrollView contentContainerStyle={styles.scrollView}>
             {zoomText.map((text, index) => (
               <Text key={index} style={styles.zoomedText}>{text}</Text>
             ))}
           </ScrollView>
-          <TouchableOpacity onPress={() => setZoomedCircle(null)}>
+          <TouchableOpacity onPress={() => setZoomedCircle(null)} style={styles.backButton}>
             <Text style={styles.backText}>Back</Text>
           </TouchableOpacity>
         </View>
@@ -196,7 +197,11 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  svgContainer: {
     position: 'relative',
+    width: '100%',
+    height: '100%',
   },
   svg: {
     position: 'absolute',
@@ -232,6 +237,7 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     padding: RADIUS / 2,
+    zIndex: 3,
   },
   scrollView: {
     flexGrow: 1,
@@ -243,14 +249,15 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     color: 'white',
   },
+  backButton: {
+    zIndex: 4,
+    padding: 10,
+    borderRadius: 5,
+  },
   backText: {
     fontSize: 16,
     alignItems: 'center',
-    backgroundColor: '#002',
     color: 'white',
-    padding: 10,
-    borderRadius: 5,
-    zIndex: 4,
   },
 });
 
