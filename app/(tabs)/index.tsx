@@ -97,20 +97,188 @@ const sephirot = [
   }, // Malkuth
 ];
 
-// Define the pathways between Sephirot
+
+
 const pathways = [
-  { start: 0, end: 1 }, // Keter -> Chochmah
-  { start: 0, end: 2 }, // Keter -> Binah
-  { start: 1, end: 3 }, // Chochmah -> Chesed
-  { start: 2, end: 4 }, // Binah -> Gevurah
-  { start: 3, end: 5 }, // Chesed -> Tiferet
-  { start: 4, end: 5 }, // Gevurah -> Tiferet
-  { start: 5, end: 6 }, // Tiferet -> Netzach
-  { start: 5, end: 7 }, // Tiferet -> Hod
-  { start: 6, end: 8 }, // Netzach -> Yesod
-  { start: 7, end: 8 }, // Hod -> Yesod
-  { start: 8, end: 9 }, // Yesod -> Malkuth
+  {
+    title: "Path of Aleph (Unity)",
+    description: "Connects Keter (1) to Chokhmah (2)",
+    start: 0,
+    end: 1,
+    letter: "א", // Aleph
+    index: 1,
+  },
+  {
+    title: "Path of Beth (Duality)",
+    description: "Connects Chokhmah (2) to Binah (3)",
+    start: 1,
+    end: 2,
+    letter: "ב", // Beth
+    index: 2,
+  },
+  {
+    title: "Path of Gimel (Trinity)",
+    description: "Connects Binah (3) to Chesed (4)",
+    start: 2,
+    end: 3,
+    letter: "ג", // Gimel
+    index: 3,
+  },
+  {
+    title: "Path of Daleth (Four Elements)",
+    description: "Connects Chesed (4) to Gevurah (5)",
+    start: 3,
+    end: 4,
+    letter: "ד", // Daleth
+    index: 4,
+  },
+  {
+    title: "Path of Hei (Five Senses)",
+    description: "Connects Gevurah (5) to Tiferet (6)",
+    start: 4,
+    end: 5,
+    letter: "ה", // Hei
+    index: 5,
+  },
+  {
+    title: "Path of Vau (Six Directions)",
+    description: "Connects Tiferet (6) to Netzach (7)",
+    start: 5,
+    end: 6,
+    letter: "ו", // Vau
+    index: 6,
+  },
+  {
+    title: "Path of Zain (Seven Planets)",
+    description: "Connects Netzach (7) to Hod (8)",
+    start: 6,
+    end: 7,
+    letter: "ז", // Zain
+    index: 7,
+  },
+  {
+    title: "Path of Cheth (Eight Aspects)",
+    description: "Connects Hod (8) to Yesod (9)",
+    start: 7,
+    end: 8,
+    letter: "ח", // Cheth
+    index: 8,
+  },
+  {
+    title: "Path of Teth (Nine Sefirot)",
+    description: "Connects Yesod (9) to Malkhut (10)",
+    start: 8,
+    end: 9,
+    letter: "ט", // Teth
+    index: 9,
+  },
+  {
+    title: "Path of Yud (Ten Sefirot)",
+    description: "Connects Keter (1) to Malkhut (10)",
+    start: 0,
+    end: 9,
+    letter: "י", // Yud
+    index: 10,
+  },
+  {
+    title: "Path of Kaf (12 Constellations)",
+    description: "Connects Malkhut (10) to Yesod (9)",
+    start: 9,
+    end: 8,
+    letter: "כ", // Kaf
+    index: 11,
+  },
+  {
+    title: "Path of Lamed (13 Attributes)",
+    description: "Connects Yesod (9) to Tiferet (6)",
+    start: 8,
+    end: 5,
+    letter: "ל", // Lamed
+    index: 12,
+  },
+  {
+    title: "Path of Mem (14 Aspects)",
+    description: "Connects Tiferet (6) to Gevurah (5)",
+    start: 5,
+    end: 4,
+    letter: "מ", // Mem
+    index: 13,
+  },
+  {
+    title: "Path of Nun (15 Aspects)",
+    description: "Connects Gevurah (5) to Chesed (4)",
+    start: 4,
+    end: 3,
+    letter: "נ", // Nun
+    index: 14,
+  },
+  {
+    title: "Path of Samech (16 Aspects)",
+    description: "Connects Chesed (4) to Binah (3)",
+    start: 3,
+    end: 2,
+    letter: "ס", // Samech
+    index: 15,
+  },
+  {
+    title: "Path of Ayin (17 Aspects)",
+    description: "Connects Binah (3) to Chokhmah (2)",
+    start: 2,
+    end: 1,
+    letter: "ע", // Ayin
+    index: 16,
+  },
+  {
+    title: "Path of Pe (18 Aspects)",
+    description: "Connects Chokhmah (2) to Keter (1)",
+    start: 1,
+    end: 0,
+    letter: "פ", // Pe
+    index: 17,
+  },
+  {
+    title: "Path of Tzaddi (19 Aspects)",
+    description: "Connects Keter (1) to Malkhut (10)",
+    start: 0,
+    end: 9,
+    letter: "צ", // Tzaddi
+    index: 18,
+  },
+  {
+    title: "Path of Qoph (Rational vs. Instinct)",
+    description: "Connects Malkhut (10) to Yesod (9)",
+    start: 9,
+    end: 8,
+    letter: "ק", // Qoph
+    index: 19,
+  },
+  {
+    title: "Path of Resh (20 Aspects)",
+    description: "Connects Yesod (9) to Hod (8)",
+    start: 8,
+    end: 7,
+    letter: "ר", // Resh
+    index: 20,
+  },
+  {
+    title: "Path of Shin (21 Aspects)",
+    description: "Connects Hod (8) to Netzach (7)",
+    start: 7,
+    end: 6,
+    letter: "ש", // Shin
+    index: 21,
+  },
+  {
+    title: "Path of Tav (22 Letters)",
+    description: "Connects Netzach (7) to Tiferet (6)",
+    start: 6,
+    end: 5,
+    letter: "ת", // Tav
+    index: 22,
+  },
 ];
+
+
 
 const App = () => {
   const [zoomedCircle, setZoomedCircle] = useState<number | null>(null);
@@ -151,6 +319,7 @@ const App = () => {
         <Svg height="100%" width="100%" style={styles.svg}>
           {/* Render lines only when no circle is zoomed */}
           {zoomedCircle === null && pathways.map((path, index) => {
+            console.log(index, path)
             const startSephirot = sephirot[path.start];
             const endSephirot = sephirot[path.end];
 
