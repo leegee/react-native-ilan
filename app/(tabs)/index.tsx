@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Dimensions } from 'react-native';
+import Svg, { Line } from 'react-native-svg';
 
 const sephirot = [
   {
@@ -94,9 +95,33 @@ const sephirot = [
   }, // Malkuth
 ];
 
+// Define the pathways between Sephirot
+const pathways = [
+  { start: 0, end: 1 }, // Keter -> Chochmah
+  { start: 0, end: 2 }, // Keter -> Binah
+  { start: 1, end: 3 }, // Chochmah -> Chesed
+  { start: 2, end: 4 }, // Binah -> Gevurah
+  { start: 3, end: 5 }, // Chesed -> Tiferet
+  { start: 4, end: 5 }, // Gevurah -> Tiferet
+  { start: 5, end: 6 }, // Tiferet -> Netzach
+  { start: 5, end: 7 }, // Tiferet -> Hod
+  { start: 6, end: 8 }, // Netzach -> Yesod
+  { start: 7, end: 8 }, // Hod -> Yesod
+  { start: 8, end: 9 }, // Yesod -> Malkuth
+];
+
 const App = () => {
   const [zoomedCircle, setZoomedCircle] = useState<number | null>(null);
   const [zoomText, setZoomText] = useState<string[]>([]);
+  const [windowDimensions, setWindowDimensions] = useState(Dimensions.get('window'));
+
+  useEffect(() => {
+    const subscription = Dimensions.addEventListener('change', ({ window }) => {
+      setWindowDimensions(window);
+    });
+
+    return () => subscription?.remove();
+  }, []);
 
   const zoomToCircle = (index: number) => {
     setZoomedCircle(index);
@@ -120,6 +145,31 @@ const App = () => {
 
   return (
     <View style={styles.container}>
+      <Svg height="100%" width="100%" style={styles.svg}>
+        {pathways.map((path, index) => {
+          const startSephirot = sephirot[path.start];
+          const endSephirot = sephirot[path.end];
+
+          // Calculate absolute center points for lines
+          const startX = startSephirot.left * windowDimensions.width; // Convert to absolute x position
+          const startY = startSephirot.top * windowDimensions.height; // Convert to absolute y position
+          const endX = endSephirot.left * windowDimensions.width; // Convert to absolute x position
+          const endY = endSephirot.top * windowDimensions.height; // Convert to absolute y position
+
+          return (
+            <Line
+              key={index}
+              x1={startX + 40} // Move to center of circle (40px radius)
+              y1={startY + 40} // Move to center of circle (40px radius)
+              x2={endX + 40} // Move to center of circle (40px radius)
+              y2={endY + 40} // Move to center of circle (40px radius)
+              stroke="black"
+              strokeWidth="2"
+            />
+          );
+        })}
+      </Svg>
+
       {zoomedCircle === null ? (
         renderCircles()
       ) : (
@@ -145,17 +195,27 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     position: 'relative',
   },
+  svg: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 1,
+  },
   circle: {
     width: 80,
     height: 80,
-    borderRadius: 30,
+    borderRadius: 40,
     backgroundColor: 'navy',
     justifyContent: 'center',
     alignItems: 'center',
     position: 'absolute',
+    zIndex: 2,
   },
   circleText: {
     textAlign: 'center',
+    color: 'white',
   },
   zoomedContainer: {
     flex: 1,
@@ -178,11 +238,15 @@ const styles = StyleSheet.create({
     fontSize: 18,
     textAlign: 'left',
     marginBottom: 10,
+    color: 'white',
   },
   backText: {
     fontSize: 16,
     alignItems: 'center',
     backgroundColor: '#002',
+    color: 'white',
+    padding: 10, // Optional: add padding for better touch area
+    borderRadius: 5, // Optional: add border radius for better aesthetics
   },
 });
 
