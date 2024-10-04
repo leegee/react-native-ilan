@@ -1,70 +1,126 @@
-import { Image, StyleSheet, Platform } from 'react-native';
+import React, { useRef, useState } from 'react';
+import { View, TouchableOpacity, StyleSheet, Animated, Dimensions, Text } from 'react-native';
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+const { width, height } = Dimensions.get('window');
 
-export default function HomeScreen() {
+const ZoomableCirclesApp = () => {
+  const [zoomedCircleIndex, setZoomedCircleIndex] = useState<number | null>(null); // Allow state to hold either a number (index) or null
+  const animatedValue = useRef(new Animated.Value(1)).current; // Value to animate the zoom effect
+
+  const handleCirclePress = (index: number) => {
+    setZoomedCircleIndex(index); // Set the pressed circle index
+    // Animate the circle to fill the screen
+    Animated.timing(animatedValue, {
+      toValue: 2, // Increase the zoom level
+      duration: 500,
+      useNativeDriver: false, // Needs to be false because we're animating layout
+    }).start();
+  };
+
+  const handleZoomOut = () => {
+    setZoomedCircleIndex(null); // Reset zoom state
+    // Animate the zoom back to the original size
+    Animated.timing(animatedValue, {
+      toValue: 1,
+      duration: 500,
+      useNativeDriver: false,
+    }).start();
+  };
+
+  // Combined positions and Hebrew names into a single array with percentage-based positions
+  const sephirot = [
+    { name: "כתר", left: 0.5, top: 0.1 },   // Keter
+    { name: "חכמה", left: 0.25, top: 0.2 }, // Chochmah
+    { name: "בינה", left: 0.75, top: 0.2 }, // Binah
+    { name: "חסד", left: 0.25, top: 0.35 }, // Chesed
+    { name: "גבורה", left: 0.75, top: 0.35 }, // Gevurah
+    { name: "תפארת", left: 0.5, top: 0.45 }, // Tiferet
+    { name: "נצח", left: 0.25, top: 0.55 }, // Netzach
+    { name: "הוד", left: 0.75, top: 0.55 }, // Hod
+    { name: "יסוד", left: 0.5, top: 0.65 }, // Yesod
+    { name: "מלכות", left: 0.5, top: 0.85 }, // Malkuth
+  ];
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({ ios: 'cmd + d', android: 'cmd + m' })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+    <View style={styles.container}>
+      {/* Render circles in the defined Sephirot positions */}
+      {sephirot.map((sefirah, index) => {
+        const circleStyle = {
+          position: 'absolute',
+          left: sefirah.left * width - 50, // Center the circle
+          top: sefirah.top * height - 50, // Center the circle
+        };
+
+        return (
+          <TouchableOpacity
+            key={index}
+            onPress={() => handleCirclePress(index)} // Now handleCirclePress expects a number
+            style={circleStyle}
+          >
+            <Animated.View
+              style={[
+                styles.circle,
+                zoomedCircleIndex === index && {
+                  // When zoomed, fill the entire screen
+                  position: 'absolute', // Required to take the full screen
+                  left: 0,
+                  top: 0,
+                  width: width,
+                  height: height,
+                  borderRadius: 0, // Change borderRadius to 0 for square on zoom
+                  transform: [{ scale: animatedValue }],
+                },
+              ]}
+            >
+              <Text style={styles.circleText}>{sefirah.name}</Text> {/* Add Hebrew text inside the circle */}
+            </Animated.View>
+          </TouchableOpacity>
+        );
+      })}
+
+      {/* Zoom out button, only visible when a circle is zoomed */}
+      {zoomedCircleIndex !== null && (
+        <TouchableOpacity style={styles.zoomOutButton} onPress={handleZoomOut}>
+          <Text style={styles.zoomOutText}>Zoom Out</Text>
+        </TouchableOpacity>
+      )}
+    </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    position: 'relative',
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  circle: {
+    width: 100,
+    height: 100,
+    backgroundColor: 'dodgerblue',
+    borderRadius: 50,
+    justifyContent: 'center', // Center the text vertically
+    alignItems: 'center', // Center the text horizontally
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
+  circleText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+    textAlign: 'center', // Center the text horizontally
+  },
+  zoomOutButton: {
     position: 'absolute',
+    top: 50,
+    right: 20,
+    backgroundColor: 'red',
+    padding: 10,
+    borderRadius: 5,
+  },
+  zoomOutText: {
+    fontSize: 16,
+    color: '#fff',
+    textAlign: 'center',
   },
 });
+
+export default ZoomableCirclesApp;
