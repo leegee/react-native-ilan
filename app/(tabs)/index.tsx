@@ -148,7 +148,8 @@ const App = () => {
   return (
     <View style={styles.container}>
       <Svg height="100%" width="100%" style={styles.svg}>
-        {pathways.map((path, index) => {
+        {/* Render lines only when no circle is zoomed */}
+        {zoomedCircle === null && pathways.map((path, index) => {
           const startSephirot = sephirot[path.start];
           const endSephirot = sephirot[path.end];
 
@@ -161,10 +162,10 @@ const App = () => {
           return (
             <Line
               key={index}
-              x1={startX + RADIUS}
-              y1={startY + RADIUS}
-              x2={endX + RADIUS}
-              y2={endY + RADIUS}
+              x1={startX + RADIUS}  // Adjust to start from center of circle
+              y1={startY + RADIUS}  // Adjust to start from center of circle
+              x2={endX + RADIUS}    // Adjust to end at center of circle
+              y2={endY + RADIUS}    // Adjust to end at center of circle
               stroke="black"
               strokeWidth="2"
             />
@@ -249,6 +250,7 @@ const styles = StyleSheet.create({
     color: 'white',
     padding: 10,
     borderRadius: 5,
+    zIndex: 4,
   },
 });
 
