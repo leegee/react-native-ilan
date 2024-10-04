@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Dimensions } from 'react-native';
 import Svg, { Line } from 'react-native-svg';
 
+const RADIUS = 40;
+
 const sephirot = [
   {
     name: "כתר",
@@ -159,10 +161,10 @@ const App = () => {
           return (
             <Line
               key={index}
-              x1={startX + 40} // Move to center of circle (40px radius)
-              y1={startY + 40} // Move to center of circle (40px radius)
-              x2={endX + 40} // Move to center of circle (40px radius)
-              y2={endY + 40} // Move to center of circle (40px radius)
+              x1={startX + RADIUS}
+              y1={startY + RADIUS}
+              x2={endX + RADIUS}
+              y2={endY + RADIUS}
               stroke="black"
               strokeWidth="2"
             />
@@ -204,9 +206,9 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   circle: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
+    width: RADIUS * 2,
+    height: RADIUS * 2,
+    borderRadius: RADIUS,
     backgroundColor: 'navy',
     justifyContent: 'center',
     alignItems: 'center',
@@ -228,7 +230,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    padding: 20,
+    padding: RADIUS / 2,
   },
   scrollView: {
     flexGrow: 1,
@@ -245,8 +247,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#002',
     color: 'white',
-    padding: 10, // Optional: add padding for better touch area
-    borderRadius: 5, // Optional: add border radius for better aesthetics
+    padding: 10,
+    borderRadius: 5,
   },
 });
 
